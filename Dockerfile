@@ -36,7 +36,16 @@ cd /work && rm -rf jhbuild && git clone https://github.com/GNOME/jhbuild.git && 
 RUN jhbuild --conditions=-wayland -f "/work/jhbuildrc" -m "/work/modulesets/gnome-suites-core-3.28.modules" build --nodeps gettext
 RUN jhbuild --conditions=-wayland -f "/work/jhbuildrc" -m "/work/modulesets/gnome-suites-core-3.28.modules" build --nodeps cairo at-spi2-atk
 RUN jhbuild --conditions=-wayland -f "/work/jhbuildrc" -m "/work/modulesets/gnome-suites-core-3.28.modules" build --nodeps --skip=glib atkmm-1.6
+RUN jhbuild --conditions=-wayland -f "/work/jhbuildrc" -m "/work/modulesets/gnome-suites-core-3.28.modules" build --nodeps --skip=glib gtk+-3
+RUN jhbuild --conditions=-wayland -f "/work/jhbuildrc" -m "/work/modulesets/gnome-suites-core-3.28.modules" build --nodeps --skip=glib pangomm-1.4
+
+ENV PATH=/app/bin:/work/inst/bin:$PATH LD_LIBRARY_PATH=/app/lib:/work/inst/lib:$LD_LIBRARY_PATH PKG_CONFIG_PATH=/app/lib/pkgconfig:/work/inst/lib/pkgconfig:$PKG_CONFIG_PATH
+
+RUN apt-get install -y cargo mesa-common-dev libgl1-mesa-dev libegl1-mesa-dev && cd /work && rm -rf libepoxy* && wget https://github.com/anholt/libepoxy/releases/download/v1.3.1/libepoxy-1.3.1.tar.bz2 && tar xjvf libepoxy-1.3.1.tar.bz2 && cd libepoxy-1.3.1 && ./configure --prefix=/app && make && make install
 RUN jhbuild --conditions=-wayland -f "/work/jhbuildrc" -m "/work/modulesets/gnome-suites-core-3.28.modules" build --nodeps --skip=glib gtkmm-3
+
+RUN cd /work && rm -rf cmake* && wget https://cmake.org/files/v3.8/cmake-3.8.2.tar.gz && tar xzvf cmake-3.8.2.tar.gz && cd cmake-3.8.2 && ./bootstrap --prefix=/work/inst --parallel=2 && make -j 2 && make install && \
+cd /work && rm -rf lcms* && wget https://downloads.sourceforge.net/lcms/lcms2-2.8.tar.gz && tar xzvf lcms2-2.8.tar.gz && cd lcms2-2.8 && ./configure --prefix=/app && make -j 2 && make install
 
 #RUN jhbuild -f "/work/jhbuildrc" -m "/work/modulesets/gnome-suites-core-3.28.modules" build --nodeps --skip=glib cairo
 #RUN jhbuild -f "/work/jhbuildrc" -m "/work/modulesets/gnome-suites-core-3.28.modules" build --nodeps --skip=glib glibmm-2.4
