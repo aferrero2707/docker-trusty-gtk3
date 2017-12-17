@@ -13,26 +13,36 @@ bison flex ragel unzip libdbus-1-dev libxtst-dev \
 cargo mesa-common-dev libgl1-mesa-dev libegl1-mesa-dev valac \
 libxml2-utils xsltproc docbook-xsl libffi-dev \
  libvorbis-dev python-six
+ 
+ADD build_gcc.sh /work/build_gcc.sh
+RUN bash /work/build_gcc.sh
+
 
 # Set environment variables
-ENV PATH=/app/bin:/work/inst/bin:$PATH LD_LIBRARY_PATH=/app/lib:/work/inst/lib:$LD_LIBRARY_PATH PKG_CONFIG_PATH=/app/lib/pkgconfig:/work/inst/lib/pkgconfig:$PKG_CONFIG_PATH
+ENV PATH=/app/bin:/work/inst/bin:$PATH LD_LIBRARY_PATH=/app/lib:/work/inst/lib64:/work/inst/lib:$LD_LIBRARY_PATH PKG_CONFIG_PATH=/app/lib/pkgconfig:/work/inst/lib/pkgconfig:$PKG_CONFIG_PATH
+
+RUN gcc -v && ls /work/inst/lib64 && echo "$LD_LIBRARY_PATH"
+RUN mkdir -p /work/conf/modulesets
+COPY *.patch /work/conf/
+COPY jhbuildrc /work/conf/
+COPY modulesets/* /work/conf/modulesets/
 
 # Get auxiliary configuration files and compile base dependencies
-RUN mkdir -p /work && cd /work && git clone https://github.com/aferrero2707/docker-trusty-gtk3 -b master conf && \
-cd /work && rm -rf Python-* && wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz && tar xJvf Python-3.6.3.tar.xz && cd Python-3.6.3 && ./configure --prefix=/app --enable-shared --enable-unicode=ucs2 && make -j 2 install
+RUN mkdir -p /work && cd /work && \
+rm -rf Python-* && wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz && tar xJvf Python-3.6.3.tar.xz && cd Python-3.6.3 && ./configure --prefix=/app --enable-shared --enable-unicode=ucs2 && make -j 2 install
 RUN cd /work && rm -rf jhbuild && git clone https://github.com/GNOME/jhbuild.git && cd jhbuild && patch -p1 -i /work/conf/jhbuild-run-as-root.patch && ./autogen.sh --prefix=/work/inst && make -j 2 install && \
 cd /work && rm -rf libepoxy* && wget https://github.com/anholt/libepoxy/releases/download/v1.3.1/libepoxy-1.3.1.tar.bz2 && tar xjvf libepoxy-1.3.1.tar.bz2 && cd libepoxy-1.3.1 && ./configure --prefix=/app && make -j 2 && make install && \
 cd /work && rm -rf cmake* && wget https://cmake.org/files/v3.8/cmake-3.8.2.tar.gz && tar xzvf cmake-3.8.2.tar.gz && cd cmake-3.8.2 && ./bootstrap --prefix=/work/inst --parallel=2 && make -j 2 && make install && \
 cd /work && rm -rf lcms* && wget https://downloads.sourceforge.net/lcms/lcms2-2.8.tar.gz && tar xzvf lcms2-2.8.tar.gz && cd lcms2-2.8 && ./configure --prefix=/app && make -j 2 && make install
 
-#cd /work && rm -f ninja* && wget https://github.com/ninja-build/ninja/releases/download/v1.6.0/ninja-linux.zip && unzip ninja-linux.zip && cp -a ninja /work/inst/bin
-
-RUN jhbuild --conditions=-wayland -f "/work/conf/jhbuildrc" -m "/work/conf/modulesets/gnome-suites-core-3.28.modules" build --nodeps gettext tiff && \
+RUN jhbuild --conditions=-wayland -f "/work/conf/jhbuildrc" -m "/work/conf/modulesets/gnome-suites-core-3.28.modules" build --nodeps gettext libtiff && \
 jhbuild --conditions=-wayland -f "/work/conf/jhbuildrc" -m "/work/conf/modulesets/gnome-suites-core-3.28.modules" build --nodeps cairo at-spi2-atk && \
 jhbuild --conditions=-wayland -f "/work/conf/jhbuildrc" -m "/work/conf/modulesets/gnome-suites-core-3.28.modules" build --nodeps --skip=glib atkmm-1.6 && \
 jhbuild --conditions=-wayland -f "/work/conf/jhbuildrc" -m "/work/conf/modulesets/gnome-suites-core-3.28.modules" build --nodeps --skip=glib gtk+-3 && \
 jhbuild --conditions=-wayland -f "/work/conf/jhbuildrc" -m "/work/conf/modulesets/gnome-suites-core-3.28.modules" build --nodeps --skip=glib pangomm-1.4 && \
-jhbuild --conditions=-wayland -f "/work/conf/jhbuildrc" -m "/work/conf/modulesets/gnome-suites-core-3.28.modules" build --nodeps --skip=glib gtkmm-3 && \
-rm -rf /work/checkout && rm -rf /work/build
+jhbuild --conditions=-wayland -f "/work/conf/jhbuildrc" -m "/work/conf/modulesets/gnome-suites-core-3.28.modules" build --nodeps --skip=glib gtkmm-3
 
 RUN cd /work && rm -rf libcanberra* && wget http://0pointer.de/lennart/projects/libcanberra/libcanberra-0.30.tar.xz && tar xJvf libcanberra-0.30.tar.xz && cd libcanberra-0.30 && ./configure --prefix=/app --enable-gtk-doc=no --enable-gtk-doc-html=no --enable-gtk-doc-pdf=no && make -j 2 && make install && rm -rf libcanberra-0.30
+
+#cleanup
+RUN rm -rf /gcc-* && cd /work && rm -rf checkout build gcc-* Python-* libepoxy* cmake* lcms2* libcanberra*

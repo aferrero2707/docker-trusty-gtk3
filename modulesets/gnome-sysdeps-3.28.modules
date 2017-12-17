@@ -661,7 +661,7 @@
     <branch repo="system" version="4"/>
   </systemmodule>
 
-  <systemmodule id="libjpeg">
+  <systemmodule id="libjpeg_">
     <branch repo="system"/>
     <systemdependencies>
       <dep type="c_include" name="jpeglib.h"/>
@@ -747,7 +747,7 @@
             version="2.7"/>
   </systemmodule>
 
-  <systemmodule id="libtiff">
+  <systemmodule id="libtiff_">
     <branch repo="system"/>
     <systemdependencies>
       <dep type="c_include" name="tiff.h"/>

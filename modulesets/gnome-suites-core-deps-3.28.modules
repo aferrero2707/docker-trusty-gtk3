@@ -65,6 +65,14 @@ the module and we will just change it to use a tarball anyway.
     href="https://download.savannah.gnu.org/releases/"/>
 <repository type="tarball" name="gnome-download"
     href="https://download.gnome.org/"/>
+<repository type="tarball"  name="jpeg" 
+    href="http://www.ijg.org/files/"/>
+<repository type="tarball"  name="openjpeg" 
+    href="http://openjpeg.googlecode.com/files/"/>
+<repository type="tarball" name="tiff"
+    href="ftp://ftp.remotesensing.org/pub/libtiff/"/>
+<repository type="tarball" name="tiff2"
+	    href="http://download.osgeo.org/libtiff/"/>
 
 <include href="gnome-sysdeps-3.28.modules"/>
 
@@ -88,6 +96,33 @@ the module and we will just change it to use a tarball anyway.
       <dep package="sqlite3"/>
     </dependencies>
   </meson>
+
+  <autotools id="libjpeg" 
+    autogen-sh="configure"
+    >
+    <branch
+      repo="jpeg"
+      module="jpegsrc.v9a.tar.gz"
+      version="9a"
+      checkoutdir="jpeg-9a"
+      >
+    </branch>
+  </autotools>
+
+  <autotools id="libtiff" 
+    autogen-sh="configure"
+    autogenargs="--disable-cxx"
+    >
+    <branch
+      repo="tiff2"
+      module="tiff-4.0.7.tar.gz"
+      version="4.0.7"
+      >
+    </branch>
+    <dependencies>
+      <dep package="libjpeg"/>
+    </dependencies>
+  </autotools>
 
   <autotools id="atk">
     <branch/>
