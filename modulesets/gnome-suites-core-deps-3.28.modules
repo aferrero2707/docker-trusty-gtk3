@@ -125,7 +125,7 @@ the module and we will just change it to use a tarball anyway.
   </autotools>
 
   <autotools id="atk">
-    <branch/>
+    <branch module="atk/2.27/atk-2.27.1.tar.xz" version="2.27.1" repo="gnome.org"/>
     <dependencies>
       <dep package="glib"/>
       <dep package="gobject-introspection"/>
@@ -134,7 +134,8 @@ the module and we will just change it to use a tarball anyway.
   </autotools>
 
   <autotools id="atkmm-1.6">
-    <branch checkoutdir="atkmm-1.6" module="atkmm" revision="atkmm-2-24"/>
+    <!-- <branch checkoutdir="atkmm-1.6" module="atkmm" revision="atkmm-2-24"/> -->
+    <branch module="atkmm/2.24/atkmm-2.24.2.tar.xz" version="2.24.2" repo="gnome.org"/>
     <dependencies>
       <dep package="glibmm-2.4"/>
       <dep package="atk"/>
@@ -207,7 +208,7 @@ the module and we will just change it to use a tarball anyway.
     <if condition-set="quartz">
       <autogenargs value="--enable-quartz --disable-gl"/>
     </if>
-    <branch repo="git.freedesktop.org" module="cairo" checkoutdir="cairo-no-librsvg">
+    <branch repo="git.freedesktop.org" module="cairo" tag="1.15.10" checkoutdir="cairo-no-librsvg">
     </branch>
     <dependencies>
       <if condition-unset="quartz">
@@ -224,7 +225,7 @@ the module and we will just change it to use a tarball anyway.
     <if condition-set="quartz">
       <autogenargs value="--enable-quartz --disable-gl"/>
     </if>
-    <branch repo="git.freedesktop.org">
+    <branch repo="git.freedesktop.org" module="cairo" tag="1.15.10">
     </branch>
     <dependencies>
       <if condition-unset="quartz">
@@ -513,7 +514,8 @@ the module and we will just change it to use a tarball anyway.
   </autotools>
 
   <autotools id="gdk-pixbuf">
-    <branch/>
+    <!-- <branch/> -->
+    <branch module="gdk-pixbuf/2.36/gdk-pixbuf-2.36.11.tar.xz" version="2.36.11" repo="gnome.org"/>
     <dependencies>
       <dep package="glib"/>
       <dep package="gobject-introspection"/>
@@ -595,7 +597,8 @@ the module and we will just change it to use a tarball anyway.
     <if condition-set="macos">
       <autogenargs value="--with-pcre=internal"/>
     </if>
-    <branch/>
+    <!-- <branch/> -->
+    <branch module="glib/2.55/glib-2.55.1.tar.xz" version="2.55.1" repo="gnome.org"/>
     <dependencies>
       <dep package="gettext"/>
       <dep package="gtk-doc"/>
@@ -613,7 +616,8 @@ the module and we will just change it to use a tarball anyway.
   </autotools>
 
   <autotools id="glibmm-2.4" supports-non-srcdir-builds="no">
-    <branch checkoutdir="glibmm-2.4" module="glibmm" revision="glibmm-2-52"/>
+    <!-- <branch checkoutdir="glibmm-2.4" module="glibmm" revision="glibmm-2-52"/> -->
+    <branch module="glibmm/2.52/glibmm-2.52.1.tar.xz" version="2.52.1" repo="gnome.org"/>
     <dependencies>
       <dep package="glib"/>
       <dep package="libsigcplusplus-2.0"/>
@@ -688,7 +692,8 @@ the module and we will just change it to use a tarball anyway.
 
   <autotools id="gobject-introspection"
              autogenargs="--with-python=python3">
-    <branch/>
+    <!-- <branch/> -->
+    <branch module="gobject-introspection/1.55/gobject-introspection-1.55.1.tar.xz" version="1.55.1" repo="gnome.org"/>
     <dependencies>
       <dep package="bison"/>
       <dep package="flex"/>
@@ -936,7 +941,8 @@ the module and we will just change it to use a tarball anyway.
     <if condition-set="quartz">
       <autogenargs value="--enable-quartz-backend"/>
     </if>
-    <branch checkoutdir="gtk+-3" module="gtk+" revision="gtk-3-22"/>
+    <!-- <branch checkoutdir="gtk+-3" module="gtk+" revision="gtk-3-22"/> -->
+    <branch module="gtk+/3.22/gtk+-3.22.26.tar.xz" version="3.22.26" repo="gnome.org"/>
     <dependencies>
       <dep package="atk"/>
       <dep package="glib"/>
@@ -1013,7 +1019,8 @@ the module and we will just change it to use a tarball anyway.
   </autotools>
 
   <autotools id="gtkmm-3">
-    <branch checkoutdir="gtkmm-3" module="gtkmm" revision="gtkmm-3-22"/>
+    <!-- <branch checkoutdir="gtkmm-3" module="gtkmm" revision="gtkmm-3-22"/> -->
+    <branch module="gtkmm/3.22/gtkmm-3.22.2.tar.xz" version="3.22.2" repo="gnome.org"/>
     <dependencies>
       <dep package="cairomm-1.0"/>
       <dep package="pangomm-1.4"/>
@@ -1105,8 +1112,9 @@ the module and we will just change it to use a tarball anyway.
   </autotools>
 
   <autotools id="harfbuzz" autogenargs="">
-    <branch repo="github.com"
-      module="behdad/harfbuzz" checkoutdir="harfbuzz"/>
+    <!-- <branch repo="github.com"
+      module="behdad/harfbuzz" checkoutdir="harfbuzz"/> -->
+    <branch module="harfbuzz/release/harfbuzz-1.7.4.tar.bz2" version="1.7.4" repo="freedesktop.org"/>
     <dependencies>
       <dep package="c++"/>
       <dep package="cairo-no-librsvg"/>
@@ -1509,11 +1517,12 @@ the module and we will just change it to use a tarball anyway.
     </dependencies>
   </autotools>
 
-  <autotools id="librsvg" supports-non-srcdir-builds="no" autogenargs="--disable-vala">
+  <autotools id="librsvg" supports-non-srcdir-builds="no" autogenargs="--disable-vala --enable-gtk-doc=no">
     <if condition-unset="gnu-elf">
       <autogenargs value="--disable-Bsymbolic"/>
     </if>
-    <branch />
+    <!-- <branch /> -->
+    <branch module="librsvg/2.42/librsvg-2.42.1.tar.xz" version="2.42.1" repo="gnome.org"/>
     <dependencies>
       <dep package="cargo"/>
       <dep package="libxml2"/>
@@ -1700,7 +1709,8 @@ the module and we will just change it to use a tarball anyway.
   </autotools>
 
   <autotools id="pango">
-    <branch/>
+    <!-- <branch/> -->
+    <branch module="pango/1.40/pango-1.40.14.tar.xz" version="1.40.14" repo="gnome.org"/>
     <dependencies>
       <dep package="glib"/>
       <dep package="cairo-no-librsvg"/>
@@ -1718,7 +1728,9 @@ the module and we will just change it to use a tarball anyway.
   </autotools>
 
   <autotools id="pangomm-1.4">
-    <branch checkoutdir="pangomm-1.4" module="pangomm" revision="pangomm-2-40"/>
+    <!-- <branch checkoutdir="pangomm-1.4" module="pangomm" revision="pangomm-2-40"/> -->
+    <!-- <branch module="pangomm/2.41/pangomm-2.41.4.tar.xz" version="2.41.4" repo="gnome.org"/> -->
+    <branch module="pangomm/2.40/pangomm-2.40.1.tar.xz" version="2.40.1" repo="gnome.org"/>
     <dependencies>
       <dep package="glibmm-2.4"/>
       <dep package="cairomm-1.0"/>
